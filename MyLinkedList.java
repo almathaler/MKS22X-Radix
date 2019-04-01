@@ -34,11 +34,11 @@ public class MyLinkedList<E>{
      prev = newPrev;
    }
 
-   public Integer getData(){
+   public E getData(){
      return data;
    }
 
-   public Integer setData(E i){
+   public E setData(E i){
      E oldData = data;
      data = i;
      return oldData;
@@ -66,33 +66,22 @@ public class MyLinkedList<E>{
 
  public static void main(String[] args){
    try{
-     MyLinkedList list = new MyLinkedList();
+     MyLinkedList<Integer> list = new MyLinkedList<Integer>();
      for (int i = 0; i<15; i++){
        list.add(Integer.valueOf(i));
      }
      System.out.println("This is list: " + list.toString());
      System.out.println("This is list backwards: " + list.reverseToString());
      System.out.println("This is debug list: " + list.debugToString());
-     System.out.println("Adding 101, 103, 105 ... 111 to the odd indexes of list");
-     for (int i = 1; i<12; i+=2){
-       list.add(i, Integer.valueOf(i+100));
+     MyLinkedList<Integer> list2 = new MyLinkedList<Integer>();
+     for (int i = 0; i<15; i++){
+       list2.add(Integer.valueOf(i));
      }
-     System.out.println(list.toString());
-     System.out.println(list.debugToString());
-     System.out.println("Now removing a few numbers");
-     for (int i = 1; i<12; i+=2){
-       list.remove(i);
-     }
-     System.out.println(list.toString());
-     System.out.println(list.debugToString());
-     System.out.println("making new string with - values");
-     MyLinkedList toAdd = new MyLinkedList();
-     for (int i = 1; i<10; i++){
-       toAdd.add(Integer.valueOf(0-i));
-     }
-     list.extend(toAdd);
-     System.out.println("Now, list: " + list.toString());
-     System.out.println(list.debugToString());
+     System.out.println("This is list2: " + list2.toString());
+     System.out.println("Now extending list to encompass list2: ");
+     list.extend(list2);
+     System.out.println("list: " + list.toString());
+     System.out.println("list2: " + list2.toString());
    }catch(IndexOutOfBoundsException e){
      System.out.println(e);
    }
@@ -104,15 +93,10 @@ public class MyLinkedList<E>{
    end = null;
  }
 
- public void clear(){ //just make it no longer point to start and end
-    start = null;
-    end = null;
-    size = 0;
- }
  public int size(){
    return size;
  }
-
+//for radix
  public boolean add(E value){
    Node toAdd = new Node(value, null, null); //make a new node with the value we want, but don't yet link it to list
    if (start == null && end == null){ //if you're adding to an empty list, make toAdd both start and end
@@ -128,6 +112,48 @@ public class MyLinkedList<E>{
    size+=1; //don't forget to increase size
    return true; //since we did it, true
  }
+ public E removeFirst() throws IndexOutOfBoundsException{
+   E toReturn;
+   if (size == 0){
+     throw new IndexOutOfBoundsException("size 0 no front");
+   }else if (size == 1){
+     toReturn = this.start.getData();
+     this.clear(); //don't have a size-- at the end cuz clear sets size = 0
+   }else{
+     toReturn = this.start.getData();
+     start = start.next();
+     start.setPrev(null);
+     size--;
+   }
+   return toReturn;
+ }
+ public void clear(){ //just make it no longer point to start and end
+    start = null;
+    end = null;
+    size = 0;
+ }
+ public void extend(MyLinkedList other){
+   //if this is an empty list, just set it to be the other on
+   if (this.size == 0){
+     start = other.start;
+     end = other.end;
+     size += other.size();
+     other.clear();
+   }else {
+     end.setNext(other.start);
+     other.start.setPrev(end);
+     end = other.end;
+     size += other.size;
+     other.clear();
+   }
+        //in O(1) runtime, move the elements from other onto the end of this
+        //The size of other is reduced to 0
+        //The size of this is now the combined sizes of both original lists
+ }
+
+
+
+
 
  private Node getNthNode(int nth) throws IndexOutOfBoundsException{
    if (nth >= size || nth < 0){ //if nth isn't an actual index, give exception
@@ -204,7 +230,7 @@ public class MyLinkedList<E>{
    if (index >= size || index<0){
      throw new IndexOutOfBoundsException("REMOVErequested index out of bounds: " + index);
    }
-   Integer toReturn = this.get(index);
+   E toReturn = this.get(index);
    if (index == size-1){
      end = end.prev();
      end.setNext(null); //if this wasn't done, toString would print out old ends
@@ -236,16 +262,7 @@ public class MyLinkedList<E>{
    return true;
  }
 
- public void extend(MyLinkedList other){
-    end.setNext(other.start);
-    other.start.setPrev(end);
-    end = other.end;
-    size += other.size;
-    other.clear();
-        //in O(1) runtime, move the elements from other onto the end of this
-        //The size of other is reduced to 0
-        //The size of this is now the combined sizes of both original lists
-    }
+
 
 
  public String toString(){
@@ -290,6 +307,10 @@ public class MyLinkedList<E>{
 
  public String debugToString(){
    String toReturn;
+   if (size == 0){
+     toReturn = "[]";
+     return toReturn;
+   }
    Node current = start.next();
    toReturn = "[" + start.debugToString();
    while (current != null){
