@@ -4,13 +4,13 @@ import java.util.Arrays;
 public class Radix{
   public static void main(String[]args){
   System.out.println("Size\t\tMax Value\tquick/builtin ratio ");
-  int[]MAX_LIST = {10};
+  int[]MAX_LIST = {10, 500, 1000000000};
   for(int MAX : MAX_LIST){
-    for(int size = 25; size < 26; size*=2){
+    for(int size = 31250; size < 500001; size*=2){
       long qtime=0;
       long btime=0;
       //average of 5 sorts.
-      for(int trial = 0 ; trial <=5; trial++){
+      for(int trial = 0 ; trial <=30; trial++){
         int []data1 = new int[size];
         int []data2 = new int[size];
         for(int i = 0; i < data1.length; i++){
@@ -28,7 +28,6 @@ public class Radix{
         btime+= t2 - t1;
         if(!Arrays.equals(data1,data2)){
           System.out.println("FAIL TO SORT!");
-          System.out.println(Arrays.toString(data1) +"\n" + Arrays.toString(data2));
           System.exit(0);
         }
       }
@@ -39,6 +38,7 @@ public class Radix{
 }
   @SuppressWarnings("unchecked")
   public static void radixsort(int[]data){
+     //System.out.println("data: " + Arrays.toString(data));
       //create the buckets and fill it w LLs
       MyLinkedList<Integer>[] digFreq = new MyLinkedList[20];
       for (int a = 0; a<digFreq.length; a++){
@@ -51,14 +51,16 @@ public class Radix{
       MyLinkedList<Integer> myData = new MyLinkedList<Integer>();
       //while finding the longest number place the data into the freqDig
       for (Integer i : data){
-        Integer processing = data[i];
+        Integer processing = i;
         //placer tells you which bucket to move to
         int placer = getDigit(processing, 1);
         //if the number is positive, use this rule
         if (processing >= 0){
           digFreq[placer+10].add(processing);
+          //System.out.println("added " + processing + " to digFreq[" + (placer+10) +"] which now looks like: " + digFreq[placer+10].toString());
         }else{ //otherwise make sure to add it before all the positives
           digFreq[9+placer].add(processing);
+          //System.out.println("added " + processing + " to digFreq[" + (placer+9) +"] which now looks like: " + digFreq[placer+9].toString());
         }
         if (Math.abs(i) > longestNum){ //longest numbers hould include negatives
           longestNum = i;
@@ -70,7 +72,7 @@ public class Radix{
           myData.extend(digFreq[d]); //add all the lists back to myData for next processing
         }
       }
-      System.out.println("myData: " + myData.toString());
+      //System.out.println("myData: " + myData.toString());
 
       //now determine how many digits are in this longest num
       int numIters = Integer.toString(longestNum).length();
@@ -104,7 +106,7 @@ public class Radix{
       for (int e = 0; e<data.length; e++){
         data[e] = myData.removeFirst();
       }
-      System.out.println("Data: " + Arrays.toString(data));
+      //System.out.println("Data: " + Arrays.toString(data));
   }
   //% in java will give negative number -- be aware of this -- this is why it is digFreq[9+placer]
   public static Integer getDigit(Integer num, int place){
