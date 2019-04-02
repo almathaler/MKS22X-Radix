@@ -4,7 +4,7 @@ import java.util.Arrays;
 public class Radix{
   public static void main(String[] args){
     System.out.println("The 3rd digit of 4321: " + getDigit(4321, 3));
-    int[] data = {3, 3, 3, 3, 3, 4, 1, 5, 2, 3, 1, 0, 0, 0};
+    int[] data = {13, 14, 42, 31, 5, 4, 2, 23, 90, 6, 5, 4, 31};
     System.out.println("data: " + Arrays.toString(data));
     radixsort(data);
     System.out.println("sorted: " + Arrays.toString(data));
@@ -34,9 +34,9 @@ public class Radix{
         for (int c = 0; c<numItersC; c++){
           Integer processing = myData.removeFirst();
           System.out.println("processing: " + processing);
-          int placer = getDigit(processing, place);
+          int placer = getDigit(processing, place); //change getDigit to return 0 if u can't get that dig
           System.out.println("placer: " + placer);
-          if (placer >= 0){
+          if (processing >= 0){
             System.out.println("going to add to list " + (placer+10) + " which looks like: ");
             System.out.println(digFreq[placer+10].toString());
             digFreq[placer+10].add(processing);//if it is a positive number, add it to its section
@@ -58,7 +58,8 @@ public class Radix{
   //% in java will give negative number -- be aware of this
   public static Integer getDigit(Integer num, int place){
     if (place > (Integer.toString(num).length())){
-      throw new IllegalArgumentException("place is greater than num digits");
+      //throw new IllegalArgumentException("place is greater than num digits");
+      return 0; //say you need 3rd of 8, that's 0
     }
     Integer toReturn = 0;
     for (int i = 0; i<place; i++){
