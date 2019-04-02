@@ -139,7 +139,9 @@ public class MyLinkedList<E>{
      end = other.end;
      size += other.size();
      other.clear();
-   }else {
+   }else if (other.size == 0){
+     //don't do anything to this 
+   }else{
      end.setNext(other.start);
      other.start.setPrev(end);
      end = other.end;

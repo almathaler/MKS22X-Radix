@@ -12,29 +12,10 @@ public class Radix{
   @SuppressWarnings("unchecked")
   public static void radixsort(int[]data){
       //MyLinkedList<Integer>[] digFreq = new MyLinkedList<Integer>[20]; //20 so that we can do negatives
-      MyLinkedList<Integer> bucket0 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket1 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket2 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket3 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket4 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket5 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket6 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket7 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket8 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket9 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket10 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket11 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket12 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket13 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket14 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket15 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket16 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket17 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket18 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer> bucket19 = new MyLinkedList<Integer>();
-      MyLinkedList<Integer>[] digFreq = {bucket0, bucket1, bucket2, bucket3, bucket4, bucket5, bucket6, bucket7,
-                                         bucket8, bucket9, bucket10, bucket11, bucket12, bucket13, bucket14, bucket15,
-                                         bucket16, bucket17, bucket18, bucket19};
+      MyLinkedList<Integer>[] digFreq = new MyLinkedList[20];
+      for (int a = 0; a<digFreq.length; a++){
+        digFreq[a] = new MyLinkedList<Integer>();
+      }
       int longestNum = 0; //find this, get it's size, that's how many iterations we use
       MyLinkedList<Integer> myData = new MyLinkedList<Integer>(); //put data into a linkedlist as variable to be updated each iteration
       for (Integer i : data){
