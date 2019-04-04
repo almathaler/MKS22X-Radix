@@ -18,8 +18,15 @@ public class MyLinkedList<E>{
       Integer setData(Integer i)
       String toString()
    **/
+   //for our iterator
    public Node next(){
      return next;
+   }
+   public boolean hasNext(){
+     if (next != null){
+       return true;
+     }
+     return false;
    }
 
    public Node prev(){
@@ -63,6 +70,7 @@ public class MyLinkedList<E>{
   }
  private int size;
  private Node start,end;
+ private Node currentIter; //this is a node, tells us where we are for iterator methods
 
  public static void main(String[] args){
    try{
@@ -71,18 +79,20 @@ public class MyLinkedList<E>{
        list.add(Integer.valueOf(i));
      }
      System.out.println("This is list: " + list.toString());
-     System.out.println("This is list backwards: " + list.reverseToString());
-     System.out.println("This is debug list: " + list.debugToString());
-     MyLinkedList<Integer> list2 = new MyLinkedList<Integer>();
-     for (int i = 0; i<15; i++){
-       list2.add(Integer.valueOf(i));
+     System.out.println("Let's iterate over list");
+     while (list.hasNext()){
+       Integer curElement = list.next();
+       System.out.println("curElmement: " + curElement);
      }
-     System.out.println("This is list2: " + list2.toString());
-     System.out.println("Now extending list to encompass list2: ");
-     list.extend(list2);
-     System.out.println("list: " + list.toString());
-     System.out.println("list2: " + list2.toString());
+     System.out.println("reseting currentIter and iterating agains: ");
+     list.resetIter();
+     while (list.hasNext()){
+       Integer curElement = list.next();
+       System.out.println("curElmement: " + curElement);
+     }
    }catch(IndexOutOfBoundsException e){
+     System.out.println(e);
+   }catch(NoSuchElementException e){
      System.out.println(e);
    }
  }
@@ -91,6 +101,33 @@ public class MyLinkedList<E>{
    size = 0;
    start = null;
    end = null;
+ }
+ //return current place of iterator methods
+ //public Integer current(){
+ //   return current;
+ //}
+ //iterator method next() which returns value at node of curent+1
+ public E next(){
+   if (currentIter == null){ //make current start
+     currentIter = start;
+     return currentIter.getData();
+   }else if (currentIter == end){
+     throw new NoSuchElementException("end of linkedList currentIter == end");
+   }else{
+     currentIter = currentIter.next(); //move currentIter node up one
+     return currentIter.getData();
+   }
+ }
+ //iterator method hasNext() which returns boolean of whether there is node after
+ public boolean hasNext(){
+   if (currentIter == null || currentIter.next() != null){ //if it's not at the end or it hasn't yet started
+     return true;
+   }
+   return false;
+ }
+ //reset where iterator is
+ public void resetIter(){
+   currentIter = null; //make it so next time next() is called, returns val of start
  }
 
  public int size(){
@@ -140,7 +177,7 @@ public class MyLinkedList<E>{
      size += other.size();
      other.clear();
    }else if (other.size == 0){
-     //don't do anything to this 
+     //don't do anything to this
    }else{
      end.setNext(other.start);
      other.start.setPrev(end);
