@@ -114,10 +114,7 @@ public class Radix{
     if (place > (Integer.toString(num).length())){
       return toReturn; //say you need 3rd of 8, that's 0. 8 = 008
     }
-    for (int i = 0; i<place; i++){
-      toReturn = num%10;
-      num/=10;
-    }
-    return toReturn;
+    place = (int) Math.pow(10, place-1);
+    return (num/place)%10;
   }
 }
